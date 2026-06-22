@@ -10,7 +10,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '1.8';
+    var FCP_VERSION = '3.0';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -53,47 +53,63 @@ function createFloatingCommentPanel() {
         _closeFloatingPanel();
     });
 
-    // ── DINAMIKUS FIGYELŐ (MutationObserver) ──
+    // ── DINAMIKUS FIGYELŐ (MutationObserver + Debounce) ──
     var targetNode = panel.querySelector('#floating-comment-body');
     if (targetNode) {
-        var observer = new MutationObserver(function() {
-            updateCommentCount();
-        });
-        observer.observe(targetNode, { childList: true, subtree: true });
+        var updateTimer;
+        new MutationObserver(function() {
+            clearTimeout(updateTimer);
+            updateTimer = setTimeout(updateCommentCount, 100);
+        }).observe(targetNode, { childList: true, subtree: true });
     }
 }
 
-// ── Intelligens kommentszámláló a te logikád alapján ──
+// ── Kommentszám kiszámítása (Logika) ──
 function updateCommentCount() {
-    // 1. Megszámoljuk a fizikailag már lerenderelt főkommenteket és megnyitott válaszokat
-    var roots = document.querySelectorAll('#floating-comment-body .et-comment').length;
+    var container = document.getElementById('floating-comment-body');
+    if (!container) return;
 
-    // 2. Összeszedjük a még be nem töltött (elrejtett) válaszokat a gombok szövegéből
+    // 1. Már lerenderelt kommentek (fő + megnyitott reply) a containeren belül
+    var visibleComments = container.querySelectorAll('.et-comment').length;
+
+    // 2. Elrejtett reply-k kiszámítása
     var hiddenReplies = 0;
-    var replyButtons = document.querySelectorAll('.et-view-replies-btn');
-    
+    var replyButtons = container.querySelectorAll('.et-view-replies-btn');
+
     replyButtons.forEach(function(btn) {
-        var toggleId = btn.getAttribute('data-toggle-replies');
+        var text = btn.textContent || '';
+        var match = text.match(/\d+/);
+        if (!match) return;
+
+        var replyCount = parseInt(match[0], 10);
+        var toggleId = btn.dataset.toggleReplies;
+
+        // Ha nincs toggleId (megváltozott a markup), a te biztonsági féked lép életbe:
+        // NEM adjuk hozzá vakon, mert a megnyitás után duplikálna. Inkább átugorjuk.
+        if (!toggleId) return;
+
         var repliesList = document.getElementById('et-replies-' + toggleId);
 
-        // Csak akkor adjuk hozzá, ha a lista még nem létezik, vagy el van rejtve (display: none)
-        if (!repliesList || repliesList.style.display === 'none') {
-            var match = btn.textContent.match(/(\d+)/);
-            if (match) {
-                hiddenReplies += parseInt(match[1], 10);
-            }
+        // getComputedStyle ellenőrzés a CSS display:none kiszűrésére
+        if (!repliesList || getComputedStyle(repliesList).display === 'none') {
+            hiddenReplies += replyCount;
         }
     });
 
-    // Végeredmény = jelenleg látható kommentek + gombok mögé bújtatott kommentek
-    var num = roots + hiddenReplies;
+    var total = visibleComments + hiddenReplies;
 
+    // Átadjuk az eredményt a tiszta UI függvénynek
+    updateCommentCounterUI(total);
+}
+
+// ── UI frissítése (Különválasztva a ChatGPT javaslatára) ──
+function updateCommentCounterUI(total) {
     var icon = document.getElementById('floating-comment-icon');
-    var headerCount = document.getElementById('my-custom-comment-count');
+    var header = document.getElementById('my-custom-comment-count');
 
     if (icon) {
-        if (num > 0) {
-            icon.textContent = num;
+        if (total > 0) {
+            icon.textContent = total;
             icon.classList.add('has-count');
             icon.classList.remove('is-bird');
         } else {
@@ -103,8 +119,8 @@ function updateCommentCount() {
         }
     }
 
-    if (headerCount) {
-        headerCount.textContent = num > 0 ? ' (' + num + ')' : '';
+    if (header) {
+        header.textContent = total > 0 ? ' (' + total + ')' : '';
     }
 }
 
@@ -149,9 +165,8 @@ function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url)
         document.body.appendChild(s);
     }
 
-    setTimeout(function() {
-        updateCommentCount();
-    }, 1000);
+    // Gyors és biztonságos kezdeti trigger
+    setTimeout(updateCommentCount, 250);
 
     var drawer = document.getElementById('floating-comment-drawer');
     if (drawer) drawer.classList.add('is-visible');
@@ -164,10 +179,6 @@ function hideFloatingCommentPanel() {
         drawer.classList.remove('is-open', 'is-visible');
     }
 
-    var icon = document.getElementById('floating-comment-icon');
-    if (icon) {
-        icon.textContent = '🐦';
-        icon.classList.remove('has-count');
-        icon.classList.add('is-bird');
-    }
+    // UI visszaállítása alaphelyzetbe
+    updateCommentCounterUI(0);
 }
