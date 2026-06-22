@@ -25,7 +25,8 @@ function createFloatingCommentPanel() {
     const btn = document.createElement('button');
     btn.id = 'floating-comment-btn';
     btn.setAttribute('aria-label', 'Kommentek megnyitása');
-    btn.innerHTML = `<span id="floating-comment-icon">🐦</span>`;
+    // Kezdetben megkapja az is-bird osztályt, mivel még nincs betöltött komment
+    btn.innerHTML = `<span id="floating-comment-icon" class="is-bird">🐦</span>`;
     drawer.appendChild(btn);
 
     // ── Panel ──
@@ -34,7 +35,7 @@ function createFloatingCommentPanel() {
     panel.innerHTML = `
         <div id="floating-comment-header">
             <span>🐦</span>
-            <span>Csicsergő</span>
+            <span>Csicsergő<span id="my-custom-comment-count"></span></span>
             <button id="floating-comment-close" aria-label="Panel bezárása">✕</button>
         </div>
         <div id="floating-comment-body">
@@ -103,26 +104,37 @@ function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url)
         document.body.appendChild(s);
     }
 
-    // Kommentszám frissítése a tab ikonján
-    // Ha van komment: szám jelenik meg, ha nincs: madár emoji
+    // Kommentszám frissítése a tab ikonján és a saját fejlécben
+    // A widget hibás számlálója helyett közvetlenül a DOM elemeket számoljuk meg
     setTimeout(() => {
-        const countEl = document.querySelector(
-            '#floating-comment-body .et-comment-count, ' +
-            '#floating-comment-body .et-comments-count, ' +
-            '#floating-comment-body .et-header h2'
+        const commentElements = document.querySelectorAll(
+            '#floating-comment-body .et-comment, ' +
+            '#floating-comment-body .et-bell-item, ' +
+            '#floating-comment-body [data-comment-id]'
         );
+        const num = commentElements.length;
         const icon = document.getElementById('floating-comment-icon');
-        if (icon && countEl) {
-            const num = parseInt(countEl.textContent?.trim());
-            if (!isNaN(num) && num > 0) {
+        
+        if (icon) {
+            if (num > 0) {
+                // Ha van komment, a számot mutatja, az animációs osztályt leveszi
                 icon.textContent = num;
                 icon.classList.add('has-count');
+                icon.classList.remove('is-bird');
             } else {
+                // Ha nincs komment, marad a madárka és megkapja az animációs osztályt
                 icon.textContent = '🐦';
                 icon.classList.remove('has-count');
+                icon.classList.add('is-bird');
             }
         }
-    }, 2000);
+
+        // Saját fejléc frissítése a Csicsergő felirat mellett
+        const headerCount = document.getElementById('my-custom-comment-count');
+        if (headerCount) {
+            headerCount.textContent = num > 0 ? ` (${num})` : '';
+        }
+    }, 2500); // Kicsit emelt időzítés, hogy az EchoThreadnek biztosan legyen ideje kirajzolni a kommenteket
 
     // Drawer megjelenítése (csak a tab látszik ki alapból)
     const drawer = document.getElementById('floating-comment-drawer');
@@ -137,10 +149,11 @@ function hideFloatingCommentPanel() {
         drawer.classList.remove('is-open', 'is-visible');
     }
 
-    // Ikon visszaállítása
+    // Ikon és osztályok visszaállítása alaphelyzetbe
     const icon = document.getElementById('floating-comment-icon');
     if (icon) {
         icon.textContent = '🐦';
         icon.classList.remove('has-count');
+        icon.classList.add('is-bird');
     }
 }
