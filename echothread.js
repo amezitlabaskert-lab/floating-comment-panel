@@ -7,136 +7,16 @@
    - Badge mutatja a kommentszámot
    - EchoThread widget egyszer töltődik be, bootstrap()-pal frissül
    - Skin-színeket követ (var(--szezon-szin), var(--szezon-hover))
+   - Gomb stílusa a #backToTop mintájára (gyűrű, árnyék, bounce)
 
    Használat (scripts.txt):
      createFloatingCommentPanel()  → init()-ben egyszer
-     updateFloatingCommentPanel()  → renderCachedPost()-ban
+     updateFloatingCommentPanel()  → renderCachedPost()-ban és initReadingTimeForDirectView()-ban
      hideFloatingCommentPanel()    → closePostModal()-ban
    ========================================================= */
 
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-panel')) return;
-
-    // ── CSS ──
-    const style = document.createElement('style');
-    style.textContent = `
-        #floating-comment-btn {
-            position: fixed;
-            bottom: 90px;
-            right: 30px;
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: var(--szezon-szin);
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            z-index: 100002;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2), 0 0 0 8px rgba(255,255,255,0.5);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-                        background 0.2s ease;
-            font-size: 22px;
-            line-height: 1;
-        }
-        #floating-comment-btn.is-visible {
-            display: flex;
-        }
-        #floating-comment-btn:hover {
-            transform: translateY(-4px) scale(1.08);
-            background: var(--szezon-hover);
-        }
-        #floating-comment-btn.is-open {
-            transform: rotate(15deg);
-        }
-        #floating-comment-badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            min-width: 20px;
-            height: 20px;
-            padding: 0 5px;
-            border-radius: 10px;
-            background: #fff;
-            color: var(--szezon-szin);
-            font-size: 11px;
-            font-weight: 800;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            box-sizing: border-box;
-        }
-        #floating-comment-badge.has-count {
-            display: flex;
-        }
-        #floating-comment-panel {
-            position: fixed;
-            bottom: 155px;
-            right: 30px;
-            width: 380px;
-            max-width: calc(100vw - 60px);
-            max-height: 60vh;
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.18), 0 0 0 8px rgba(255,255,255,0.4);
-            z-index: 100001;
-            overflow: hidden;
-            display: none;
-            flex-direction: column;
-            transform: translateY(20px);
-            opacity: 0;
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-                        opacity 0.2s ease;
-        }
-        #floating-comment-panel.is-visible {
-            display: flex;
-        }
-        #floating-comment-panel.is-open {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        #floating-comment-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 18px;
-            background: var(--szezon-szin);
-            color: #fff;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 14px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-        #floating-comment-header span:first-child {
-            font-size: 18px;
-        }
-        #floating-comment-body {
-            overflow-y: auto;
-            flex: 1;
-            padding: 16px;
-            -webkit-overflow-scrolling: touch;
-        }
-        #floating-comment-body #echothread {
-            margin-top: 0 !important;
-        }
-        @media (max-width: 768px) {
-            #floating-comment-panel {
-                right: 15px;
-                bottom: 140px;
-                width: calc(100vw - 30px);
-                max-height: 55vh;
-            }
-            #floating-comment-btn {
-                right: 15px;
-                bottom: 80px;
-            }
-        }
-    `;
-    document.head.appendChild(style);
 
     // ── Gomb ──
     const btn = document.createElement('button');
@@ -184,10 +64,8 @@ function createFloatingCommentPanel() {
     });
 }
 
-// ── Lebegő panel frissítése modál megnyitásakor ──
-// Frissíti az #echothread attribútumait az aktuális poszthoz,
-// majd bootstrap()-pal újrainicializálja a widgetet.
-// Meghívandó a renderCachedPost()-ból, az echothreadDiv beállítása után.
+// ── Lebegő panel frissítése modál megnyitásakor vagy sima nézetben ──
+// Meghívandó a renderCachedPost()-ból és initReadingTimeForDirectView()-ból.
 function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url) {
     const echoDiv = document.querySelector('#floating-comment-body #echothread');
     if (!echoDiv) return;
