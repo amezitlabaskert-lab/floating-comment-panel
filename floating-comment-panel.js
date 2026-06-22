@@ -22,10 +22,7 @@ function createFloatingCommentPanel() {
     const btn = document.createElement('button');
     btn.id = 'floating-comment-btn';
     btn.setAttribute('aria-label', 'Kommentek megnyitása');
-    btn.innerHTML = `
-        💬
-        <span id="floating-comment-badge"></span>
-    `;
+    btn.innerHTML = `<span id="floating-comment-icon">🐦</span>`;
     document.body.appendChild(btn);
 
     // ── Panel ──
@@ -89,18 +86,24 @@ function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url)
         document.body.appendChild(s);
     }
 
-    // Kommentszám badge frissítése
-    // Rövid késleltetéssel, hogy a widget rendereljen
+    // Kommentszám frissítése a gomb közepén
+    // Ha van komment: szám jelenik meg, ha nincs: madár emoji
     setTimeout(() => {
-        const countEl = document.querySelector('#floating-comment-body .et-comment-count, #floating-comment-body .et-comments-count');
-        const badge = document.getElementById('floating-comment-badge');
-        if (badge && countEl) {
-            const count = countEl.textContent?.trim();
-            if (count && count !== '0') {
-                badge.textContent = count;
-                badge.classList.add('has-count');
+        const countEl = document.querySelector('#floating-comment-body .et-comment-count, #floating-comment-body .et-comments-count, #floating-comment-body .et-header h2');
+        const icon = document.getElementById('floating-comment-icon');
+        if (icon && countEl) {
+            const text = countEl.textContent?.trim();
+            const num = parseInt(text);
+            if (!isNaN(num) && num > 0) {
+                icon.textContent = num;
+                icon.style.fontSize = '16px';
+                icon.style.fontWeight = '800';
+                icon.style.fontFamily = "'Plus Jakarta Sans', sans-serif";
             } else {
-                badge.classList.remove('has-count');
+                icon.textContent = '🐦';
+                icon.style.fontSize = '';
+                icon.style.fontWeight = '';
+                icon.style.fontFamily = '';
             }
         }
     }, 2000);
@@ -122,5 +125,11 @@ function hideFloatingCommentPanel() {
         panel.classList.remove('is-open');
         setTimeout(() => panel.classList.remove('is-visible'), 250);
     }
-    if (badge) badge.classList.remove('has-count');
+    const icon = document.getElementById('floating-comment-icon');
+    if (icon) {
+        icon.textContent = '🐦';
+        icon.style.fontSize = '';
+        icon.style.fontWeight = '';
+        icon.style.fontFamily = '';
+    }
 }
