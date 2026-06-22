@@ -99,7 +99,7 @@ function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url)
             const num = parseInt(text);
             if (!isNaN(num) && num > 0) {
                 icon.textContent = num;
-                icon.style.fontSize = '16px';
+                icon.style.fontSize = '20px';
                 icon.style.fontWeight = '800';
                 icon.style.fontFamily = "'Plus Jakarta Sans', sans-serif";
             } else {
