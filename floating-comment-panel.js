@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '3.8';
+    var FCP_VERSION = '3.9';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -34,7 +34,7 @@ function createFloatingCommentPanel() {
     panel.id = 'floating-comment-panel';
     panel.innerHTML =
         '<div id="floating-comment-header">' +
-            '<span style="display:inline-block; transform:scaleX(-1);">🐦</span>' +' +
+            '<span style="display:inline-block; transform:scaleX(-1);">🐦</span>' +
             '<span>Csicsergő<span id="my-custom-comment-count"></span></span>' +
             '<button id="floating-comment-close" aria-label="Csicsergő bezárása">✕</button>' +
         '</div>' +
@@ -103,12 +103,9 @@ function updateCommentCounterUI(total) {
     var countDisplay = document.getElementById('comment-count-display');
     var header = document.getElementById('my-custom-comment-count');
 
-    // Tab számlálója
     if (countDisplay) {
         countDisplay.textContent = total > 0 ? '(' + total + ')' : '';
     }
-
-    // Panel header számlálója
     if (header) {
         header.textContent = total > 0 ? ' (' + total + ')' : '';
     }
