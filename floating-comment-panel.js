@@ -15,7 +15,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    const FCP_VERSION = '1.2';
+    const FCP_VERSION = '1.3';
 
     // ── Drawer (tab + panel együtt) ──
     const drawer = document.createElement('div');
