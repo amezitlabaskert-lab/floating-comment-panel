@@ -5,12 +5,13 @@
    - Tab fizikailag a panel bal széle, együtt csúsznak
    - Skin-színeket követ (var(--szezon-szin), var(--szezon-hover))
    - EchoThread widget egyszer töltődik be, bootstrap()-pal frissül
+   - "kommentek" felirat külső label, elforgva a tab bal szélén
    ========================================================= */
 
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '3.3';
+    var FCP_VERSION = '3.4';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -20,9 +21,9 @@ function createFloatingCommentPanel() {
     var btn = document.createElement('button');
     btn.id = 'floating-comment-btn';
     btn.setAttribute('aria-label', 'Kommentek megnyitása');
-    // Itt van a fix struktúra: "kommentek" szöveg + madár + számláló
-    btn.innerHTML = 
-        '<span class="btn-text">kommentek</span>' +
+    // "kommentek" label elforgva + madár + számláló
+    btn.innerHTML =
+        '<div id="floating-comment-label">kommentek</div>' +
         '<div id="floating-comment-header-icon">' +
             '<span class="bird-icon">🐦</span>' +
             '<span id="comment-count-display"></span>' +
@@ -32,7 +33,7 @@ function createFloatingCommentPanel() {
     // ── Panel ──
     var panel = document.createElement('div');
     panel.id = 'floating-comment-panel';
-    panel.innerHTML = 
+    panel.innerHTML =
         '<div id="floating-comment-header">' +
             '<span>🐦</span>' +
             '<span>Csicsergő<span id="my-custom-comment-count"></span></span>' +
@@ -45,7 +46,7 @@ function createFloatingCommentPanel() {
             '</div>' +
         '</div>' +
         '<div id="floating-comment-footer">v' + FCP_VERSION + '</div>';
-        
+
     drawer.appendChild(panel);
     document.body.appendChild(drawer);
 
@@ -112,7 +113,7 @@ function updateCommentCounterUI(total) {
     // Madárka forgatása (ha van komment, egyenes, ha nincs, elfordul)
     if (birdIcon) {
         birdIcon.style.transition = 'transform 0.5s ease';
-        birdIcon.style.transform = total > 0 ? 'rotate(0deg)' : 'rotate(-25deg)';
+        birdIcon.style.transform = total > 0 ? 'scaleX(-1) rotate(90deg)' : 'scaleX(-1) rotate(65deg)';
     }
 
     // Panel header számlálója
