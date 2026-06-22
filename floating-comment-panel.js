@@ -18,6 +18,8 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-panel')) return;
 
+    const FCP_VERSION = '1.1';
+
     // ── Gomb ──
     const btn = document.createElement('button');
     btn.id = 'floating-comment-btn';
@@ -39,6 +41,7 @@ function createFloatingCommentPanel() {
                  data-api-key="-_Bx_aoOvDh-6sANgDStoZC-f9I6GCwlTFiSVuIJuZQ">
             </div>
         </div>
+        <div id="floating-comment-footer">v${FCP_VERSION}</div>
     `;
     document.body.appendChild(panel);
 
