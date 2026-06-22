@@ -10,7 +10,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '3.0';
+    var FCP_VERSION = '3.2';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -20,7 +20,13 @@ function createFloatingCommentPanel() {
     var btn = document.createElement('button');
     btn.id = 'floating-comment-btn';
     btn.setAttribute('aria-label', 'Kommentek megnyitása');
-    btn.innerHTML = '<span id="floating-comment-icon" class="is-bird">🐦</span>';
+    // Itt van a fix struktúra: madár + számláló helye + "kommentek" szöveg
+    btn.innerHTML = 
+        '<div id="floating-comment-header-icon">' +
+            '<span class="bird-icon">🐦</span>' +
+            '<span id="comment-count-display"></span>' +
+        '</div>' +
+        '<span class="btn-text">kommentek</span>';
     drawer.appendChild(btn);
 
     // ── Panel ──
@@ -69,10 +75,7 @@ function updateCommentCount() {
     var container = document.getElementById('floating-comment-body');
     if (!container) return;
 
-    // 1. Már lerenderelt kommentek (fő + megnyitott reply) a containeren belül
     var visibleComments = container.querySelectorAll('.et-comment').length;
-
-    // 2. Elrejtett reply-k kiszámítása
     var hiddenReplies = 0;
     var replyButtons = container.querySelectorAll('.et-view-replies-btn');
 
@@ -83,42 +86,29 @@ function updateCommentCount() {
 
         var replyCount = parseInt(match[0], 10);
         var toggleId = btn.dataset.toggleReplies;
-
-        // Ha nincs toggleId (megváltozott a markup), a te biztonsági féked lép életbe:
-        // NEM adjuk hozzá vakon, mert a megnyitás után duplikálna. Inkább átugorjuk.
         if (!toggleId) return;
 
         var repliesList = document.getElementById('et-replies-' + toggleId);
-
-        // getComputedStyle ellenőrzés a CSS display:none kiszűrésére
         if (!repliesList || getComputedStyle(repliesList).display === 'none') {
             hiddenReplies += replyCount;
         }
     });
 
     var total = visibleComments + hiddenReplies;
-
-    // Átadjuk az eredményt a tiszta UI függvénynek
     updateCommentCounterUI(total);
 }
 
-// ── UI frissítése (Különválasztva a ChatGPT javaslatára) ──
+// ── UI frissítése ──
 function updateCommentCounterUI(total) {
-    var icon = document.getElementById('floating-comment-icon');
+    var countDisplay = document.getElementById('comment-count-display');
     var header = document.getElementById('my-custom-comment-count');
 
-    if (icon) {
-        if (total > 0) {
-            icon.textContent = total;
-            icon.classList.add('has-count');
-            icon.classList.remove('is-bird');
-        } else {
-            icon.textContent = '🐦';
-            icon.classList.remove('has-count');
-            icon.classList.add('is-bird');
-        }
+    // Tab számlálója
+    if (countDisplay) {
+        countDisplay.textContent = total > 0 ? ' (' + total + ')' : '';
     }
 
+    // Panel header számlálója
     if (header) {
         header.textContent = total > 0 ? ' (' + total + ')' : '';
     }
@@ -165,9 +155,7 @@ function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url)
         document.body.appendChild(s);
     }
 
-    // Gyors és biztonságos kezdeti trigger
     setTimeout(updateCommentCount, 250);
-
     var drawer = document.getElementById('floating-comment-drawer');
     if (drawer) drawer.classList.add('is-visible');
 }
@@ -178,7 +166,5 @@ function hideFloatingCommentPanel() {
     if (drawer) {
         drawer.classList.remove('is-open', 'is-visible');
     }
-
-    // UI visszaállítása alaphelyzetbe
     updateCommentCounterUI(0);
 }
