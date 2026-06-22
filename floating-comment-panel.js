@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '3.4';
+    var FCP_VERSION = '3.5';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -23,11 +23,15 @@ function createFloatingCommentPanel() {
     btn.setAttribute('aria-label', 'Kommentek megnyitása');
     // "kommentek" label elforgva + madár + számláló
     btn.innerHTML =
-        '<div id="floating-comment-label">kommentek</div>' +
         '<div id="floating-comment-header-icon">' +
             '<span class="bird-icon">🐦</span>' +
             '<span id="comment-count-display"></span>' +
         '</div>';
+
+    var label = document.createElement('div');
+    label.id = 'floating-comment-label';
+    label.textContent = 'kommentek';
+    drawer.appendChild(label);
     drawer.appendChild(btn);
 
     // ── Panel ──
