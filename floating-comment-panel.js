@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '3.6';
+    var FCP_VERSION = '3.7';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -20,10 +20,9 @@ function createFloatingCommentPanel() {
     // ── Tab (a drawer bal széle) ──
     var btn = document.createElement('button');
     btn.id = 'floating-comment-btn';
-    btn.setAttribute('aria-label', 'Kommentek megnyitása');
-    // "kommentek" label elforgva + madár + számláló
+    btn.setAttribute('aria-label', 'Csicsergő megnyitása');
     btn.innerHTML =
-        '<div id="floating-comment-label">kommentek</div>' +
+        '<div id="floating-comment-label">Csicsergő</div>' +
         '<div id="floating-comment-header-icon">' +
             '<span class="bird-icon">🐦</span>' +
             '<span id="comment-count-display"></span>' +
@@ -102,18 +101,11 @@ function updateCommentCount() {
 // ── UI frissítése ──
 function updateCommentCounterUI(total) {
     var countDisplay = document.getElementById('comment-count-display');
-    var birdIcon = document.querySelector('.bird-icon');
     var header = document.getElementById('my-custom-comment-count');
 
     // Tab számlálója
     if (countDisplay) {
         countDisplay.textContent = total > 0 ? '(' + total + ')' : '';
-    }
-
-    // Madárka forgatása (ha van komment, egyenes, ha nincs, elfordul)
-    if (birdIcon) {
-        birdIcon.style.transition = 'transform 0.5s ease';
-        birdIcon.style.transform = total > 0 ? 'scaleX(-1) rotate(90deg)' : 'scaleX(-1) rotate(65deg)';
     }
 
     // Panel header számlálója
