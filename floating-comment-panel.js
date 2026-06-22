@@ -1,13 +1,10 @@
 /* =========================================================
-   LEBEGŐ KOMMENT PANEL — mezitlabaskert.hu
+   LEBEGŐ KOMMENT DRAWER — mezitlabaskert.hu
    GitHub: amezitlabaskert-lab/floating-comment-panel
 
-   - Csak modál nyitva látható (jobb alul)
-   - Gombra kattintva nyílik/csukódik a panel
-   - Badge mutatja a kommentszámot
-   - EchoThread widget egyszer töltődik be, bootstrap()-pal frissül
+   - Tab fizikailag a panel bal széle, együtt csúsznak
    - Skin-színeket követ (var(--szezon-szin), var(--szezon-hover))
-   - Gomb stílusa a #backToTop mintájára (gyűrű, árnyék, bounce)
+   - EchoThread widget egyszer töltődik be, bootstrap()-pal frissül
 
    Használat (scripts.txt):
      createFloatingCommentPanel()  → init()-ben egyszer
@@ -16,16 +13,20 @@
    ========================================================= */
 
 function createFloatingCommentPanel() {
-    if (document.getElementById('floating-comment-panel')) return;
+    if (document.getElementById('floating-comment-drawer')) return;
 
-    const FCP_VERSION = '1.1';
+    const FCP_VERSION = '1.2';
 
-    // ── Gomb ──
+    // ── Drawer (tab + panel együtt) ──
+    const drawer = document.createElement('div');
+    drawer.id = 'floating-comment-drawer';
+
+    // ── Tab (a drawer bal széle) ──
     const btn = document.createElement('button');
     btn.id = 'floating-comment-btn';
     btn.setAttribute('aria-label', 'Kommentek megnyitása');
     btn.innerHTML = `<span id="floating-comment-icon">🐦</span>`;
-    document.body.appendChild(btn);
+    drawer.appendChild(btn);
 
     // ── Panel ──
     const panel = document.createElement('div');
@@ -34,6 +35,7 @@ function createFloatingCommentPanel() {
         <div id="floating-comment-header">
             <span>🐦</span>
             <span>Csicsergő</span>
+            <button id="floating-comment-close" aria-label="Panel bezárása">✕</button>
         </div>
         <div id="floating-comment-body">
             <div id="echothread"
@@ -43,25 +45,37 @@ function createFloatingCommentPanel() {
         </div>
         <div id="floating-comment-footer">v${FCP_VERSION}</div>
     `;
-    document.body.appendChild(panel);
+    drawer.appendChild(panel);
+    document.body.appendChild(drawer);
 
-    // ── Gomb kattintás: panel nyit/csuk ──
+    // ── Tab kattintás: nyit/csuk ──
     btn.addEventListener('click', () => {
-        const isOpen = panel.classList.contains('is-open');
-        if (isOpen) {
-            panel.classList.remove('is-open');
-            btn.classList.remove('is-open');
-            setTimeout(() => panel.classList.remove('is-visible'), 250);
-        } else {
-            panel.classList.add('is-visible');
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    panel.classList.add('is-open');
-                    btn.classList.add('is-open');
-                });
-            });
-        }
+        _toggleFloatingPanel();
     });
+
+    // ── Bezárógomb ──
+    panel.querySelector('#floating-comment-close').addEventListener('click', () => {
+        _closeFloatingPanel();
+    });
+}
+
+// ── Belső: nyit/csuk toggle ──
+function _toggleFloatingPanel() {
+    const drawer = document.getElementById('floating-comment-drawer');
+    if (!drawer) return;
+    const isOpen = drawer.classList.contains('is-open');
+    if (isOpen) {
+        _closeFloatingPanel();
+    } else {
+        drawer.classList.add('is-open');
+    }
+}
+
+// ── Belső: bezár ──
+function _closeFloatingPanel() {
+    const drawer = document.getElementById('floating-comment-drawer');
+    if (!drawer) return;
+    drawer.classList.remove('is-open');
 }
 
 // ── Lebegő panel frissítése modál megnyitásakor vagy sima nézetben ──
@@ -89,50 +103,44 @@ function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url)
         document.body.appendChild(s);
     }
 
-    // Kommentszám frissítése a gomb közepén
+    // Kommentszám frissítése a tab ikonján
     // Ha van komment: szám jelenik meg, ha nincs: madár emoji
     setTimeout(() => {
-        const countEl = document.querySelector('#floating-comment-body .et-comment-count, #floating-comment-body .et-comments-count, #floating-comment-body .et-header h2');
+        const countEl = document.querySelector(
+            '#floating-comment-body .et-comment-count, ' +
+            '#floating-comment-body .et-comments-count, ' +
+            '#floating-comment-body .et-header h2'
+        );
         const icon = document.getElementById('floating-comment-icon');
         if (icon && countEl) {
-            const text = countEl.textContent?.trim();
-            const num = parseInt(text);
+            const num = parseInt(countEl.textContent?.trim());
             if (!isNaN(num) && num > 0) {
                 icon.textContent = num;
-                icon.style.fontSize = '20px';
-                icon.style.fontWeight = '800';
-                icon.style.fontFamily = "'Plus Jakarta Sans', sans-serif";
+                icon.classList.add('has-count');
             } else {
                 icon.textContent = '🐦';
-                icon.style.fontSize = '';
-                icon.style.fontWeight = '';
-                icon.style.fontFamily = '';
+                icon.classList.remove('has-count');
             }
         }
     }, 2000);
 
-    // Gomb megjelenítése
-    const btn = document.getElementById('floating-comment-btn');
-    if (btn) btn.classList.add('is-visible');
+    // Drawer megjelenítése (csak a tab látszik ki alapból)
+    const drawer = document.getElementById('floating-comment-drawer');
+    if (drawer) drawer.classList.add('is-visible');
 }
 
 // ── Lebegő panel elrejtése modál záráskor ──
 // Meghívandó a closePostModal()-ból.
 function hideFloatingCommentPanel() {
-    const btn = document.getElementById('floating-comment-btn');
-    const panel = document.getElementById('floating-comment-panel');
-    const badge = document.getElementById('floating-comment-badge');
-
-    if (btn) btn.classList.remove('is-visible', 'is-open');
-    if (panel) {
-        panel.classList.remove('is-open');
-        setTimeout(() => panel.classList.remove('is-visible'), 250);
+    const drawer = document.getElementById('floating-comment-drawer');
+    if (drawer) {
+        drawer.classList.remove('is-open', 'is-visible');
     }
+
+    // Ikon visszaállítása
     const icon = document.getElementById('floating-comment-icon');
     if (icon) {
         icon.textContent = '🐦';
-        icon.style.fontSize = '';
-        icon.style.fontWeight = '';
-        icon.style.fontFamily = '';
+        icon.classList.remove('has-count');
     }
 }
