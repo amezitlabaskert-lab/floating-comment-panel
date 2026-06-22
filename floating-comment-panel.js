@@ -10,7 +10,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '1.7';
+    var FCP_VERSION = '1.8';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -54,7 +54,6 @@ function createFloatingCommentPanel() {
     });
 
     // ── DINAMIKUS FIGYELŐ (MutationObserver) ──
-    // Amint az EchoThread renderel vagy változtat valamit, azonnal frissül a számláló
     var targetNode = panel.querySelector('#floating-comment-body');
     if (targetNode) {
         var observer = new MutationObserver(function() {
@@ -64,9 +63,30 @@ function createFloatingCommentPanel() {
     }
 }
 
-// ── Tűpontos kommentszámláló a te logikád alapján ──
+// ── Intelligens kommentszámláló a te logikád alapján ──
 function updateCommentCount() {
-    var num = document.querySelectorAll('#floating-comment-body .et-comment').length;
+    // 1. Megszámoljuk a fizikailag már lerenderelt főkommenteket és megnyitott válaszokat
+    var roots = document.querySelectorAll('#floating-comment-body .et-comment').length;
+
+    // 2. Összeszedjük a még be nem töltött (elrejtett) válaszokat a gombok szövegéből
+    var hiddenReplies = 0;
+    var replyButtons = document.querySelectorAll('.et-view-replies-btn');
+    
+    replyButtons.forEach(function(btn) {
+        var toggleId = btn.getAttribute('data-toggle-replies');
+        var repliesList = document.getElementById('et-replies-' + toggleId);
+
+        // Csak akkor adjuk hozzá, ha a lista még nem létezik, vagy el van rejtve (display: none)
+        if (!repliesList || repliesList.style.display === 'none') {
+            var match = btn.textContent.match(/(\d+)/);
+            if (match) {
+                hiddenReplies += parseInt(match[1], 10);
+            }
+        }
+    });
+
+    // Végeredmény = jelenleg látható kommentek + gombok mögé bújtatott kommentek
+    var num = roots + hiddenReplies;
 
     var icon = document.getElementById('floating-comment-icon');
     var headerCount = document.getElementById('my-custom-comment-count');
@@ -129,7 +149,6 @@ function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url)
         document.body.appendChild(s);
     }
 
-    // Első kényszerített lefutás betöltés után nem sokkal
     setTimeout(function() {
         updateCommentCount();
     }, 1000);
