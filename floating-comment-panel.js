@@ -5,17 +5,12 @@
    - Tab fizikailag a panel bal széle, együtt csúsznak
    - Skin-színeket követ (var(--szezon-szin), var(--szezon-hover))
    - EchoThread widget egyszer töltődik be, bootstrap()-pal frissül
-
-   Használat (scripts.txt):
-     createFloatingCommentPanel()  → init()-ben egyszer
-     updateFloatingCommentPanel()  → renderCachedPost()-ban és initReadingTimeForDirectView()-ban
-     hideFloatingCommentPanel()    → closePostModal()-ban
    ========================================================= */
 
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '1.4';
+    var FCP_VERSION = '1.7';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -57,6 +52,40 @@ function createFloatingCommentPanel() {
     panel.querySelector('#floating-comment-close').addEventListener('click', function() {
         _closeFloatingPanel();
     });
+
+    // ── DINAMIKUS FIGYELŐ (MutationObserver) ──
+    // Amint az EchoThread renderel vagy változtat valamit, azonnal frissül a számláló
+    var targetNode = panel.querySelector('#floating-comment-body');
+    if (targetNode) {
+        var observer = new MutationObserver(function() {
+            updateCommentCount();
+        });
+        observer.observe(targetNode, { childList: true, subtree: true });
+    }
+}
+
+// ── Tűpontos kommentszámláló a te logikád alapján ──
+function updateCommentCount() {
+    var num = document.querySelectorAll('#floating-comment-body .et-comment').length;
+
+    var icon = document.getElementById('floating-comment-icon');
+    var headerCount = document.getElementById('my-custom-comment-count');
+
+    if (icon) {
+        if (num > 0) {
+            icon.textContent = num;
+            icon.classList.add('has-count');
+            icon.classList.remove('is-bird');
+        } else {
+            icon.textContent = '🐦';
+            icon.classList.remove('has-count');
+            icon.classList.add('is-bird');
+        }
+    }
+
+    if (headerCount) {
+        headerCount.textContent = num > 0 ? ' (' + num + ')' : '';
+    }
 }
 
 // ── Belső: nyit/csuk toggle ──
@@ -78,12 +107,11 @@ function _closeFloatingPanel() {
     drawer.classList.remove('is-open');
 }
 
-// ── Lebegő panel frissítése modál megnyitásakor vagy sima nézetben ──
+// ── Lebegő panel frissítése ──
 function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url) {
     var echoDiv = document.querySelector('#floating-comment-body #echothread');
     if (!echoDiv) return;
 
-    // Attribútumok frissítése az aktuális poszthoz
     echoDiv.setAttribute('data-page-url', postPageUrl || url);
     echoDiv.setAttribute('data-page-title', titleText || document.title);
     if (postIdentifier) {
@@ -92,7 +120,6 @@ function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url)
         echoDiv.removeAttribute('data-identifier');
     }
 
-    // Widget újrainicializálás vagy első betöltés
     if (window.EchoThread && window.EchoThread.bootstrap) {
         window.EchoThread.bootstrap();
     } else {
@@ -102,48 +129,22 @@ function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url)
         document.body.appendChild(s);
     }
 
-    // Kommentszám frissítése a tab ikonján és a saját fejlécben
+    // Első kényszerített lefutás betöltés után nem sokkal
     setTimeout(function() {
-        var commentElements = document.querySelectorAll(
-            '#floating-comment-body .et-comment, ' +
-            '#floating-comment-body .et-bell-item, ' +
-            '#floating-comment-body [data-comment-id]'
-        );
-        var num = commentElements.length;
-        var icon = document.getElementById('floating-comment-icon');
-        
-        if (icon) {
-            if (num > 0) {
-                icon.textContent = num;
-                icon.classList.add('has-count');
-                icon.classList.remove('is-bird');
-            } else {
-                icon.textContent = '🐦';
-                icon.classList.remove('has-count');
-                icon.classList.add('is-bird');
-            }
-        }
+        updateCommentCount();
+    }, 1000);
 
-        // Saját fejléc frissítése a Csicsergő felirat mellett
-        var headerCount = document.getElementById('my-custom-comment-count');
-        if (headerCount) {
-            headerCount.textContent = num > 0 ? ' (' + num + ')' : '';
-        }
-    }, 2500);
-
-    // Drawer megjelenítése (csak a tab látszik ki alapból)
     var drawer = document.getElementById('floating-comment-drawer');
     if (drawer) drawer.classList.add('is-visible');
 }
 
-// ── Lebegő panel elrejtése modál záráskor ──
+// ── Lebegő panel elrejtése ──
 function hideFloatingCommentPanel() {
     var drawer = document.getElementById('floating-comment-drawer');
     if (drawer) {
         drawer.classList.remove('is-open', 'is-visible');
     }
 
-    // Ikon és osztályok visszaállítása alaphelyzetbe
     var icon = document.getElementById('floating-comment-icon');
     if (icon) {
         icon.textContent = '🐦';
