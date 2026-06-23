@@ -176,8 +176,33 @@
 #floating-comment-body .et-avatar,
 #floating-comment-body .et-avatar-guest,
 #floating-comment-body img[src*="i.imgur.com"] {
-    box-shadow: 0 1px 4px var(--text-primary) !important; /* Csak az árnyék */
+    box-shadow: 0 1px 4px var(--text-primary) !important;
     box-sizing: border-box !important;
+}
+
+/* ── Ide illeszd be az új bejelentkezési gomb CSS-t ── */
+#floating-comment-body .et-signin-band-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px !important;
+    margin-top: 15px !important;
+}
+
+#floating-comment-body .et-signin-band-row > button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 10px !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    min-height: 48px !important;
+    cursor: pointer !important;
+    transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+}
+
+#floating-comment-body .et-signin-band-row > button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15) !important;
 }
 
 /* ── FOOTER ── */
@@ -329,7 +354,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.9.8';
+    var FCP_VERSION = '6.9.9';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
