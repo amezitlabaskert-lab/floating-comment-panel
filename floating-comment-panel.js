@@ -192,7 +192,7 @@
 }
 .et-header {
     display: flex !important;
-    justify-content: flex-end !important;
+    justify-content: space-between !important;
     align-items: center !important;
     padding-bottom: 10px !important;
     border-bottom: 1px solid rgba(0,0,0,0.05) !important;
@@ -267,7 +267,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.7';
+    var FCP_VERSION = '6.8';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
@@ -329,13 +329,11 @@ function syncEtCommentCount() {
     var header = document.getElementById('my-custom-comment-count');
     if (!container || !countDisplay) return;
 
-    // Az EchoThread a teljes kommentszámot (válaszokkal együtt) a
-    // .et-comment-count elemben jeleníti meg – ezt másoljuk a tabra.
-    var etCount = container.querySelector('.et-comment-count');
+    var etHeader = container.querySelector('.et-header h2');
     var total = 0;
-    if (etCount) {
-        var parsed = parseInt(etCount.textContent, 10);
-        if (!isNaN(parsed)) total = parsed;
+    if (etHeader) {
+        var match = etHeader.textContent.match(/\d+/);
+        if (match) total = parseInt(match[0], 10);
     }
 
     countDisplay.textContent = '(' + total + ')';
@@ -512,7 +510,6 @@ function magyaritEchoThread() {
     function etOverride() {
         var et = document.getElementById('floating-comment-body');
         if (!et) return;
-        et.querySelectorAll('.et-header').forEach(function (el) { el.style.justifyContent = 'space-between'; });
         et.querySelectorAll('.et-format-hint').forEach(function (el) { el.style.display = 'none'; });
         et.querySelectorAll('.et-bell-dropdown').forEach(function (el) { el.style.transform = 'translateX(100px)'; });
         et.querySelectorAll('.et-footer').forEach(function (el) { el.style.display = 'none'; });
