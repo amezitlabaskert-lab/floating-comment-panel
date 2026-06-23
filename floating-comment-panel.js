@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '4.3';
+    var FCP_VERSION = '4.4';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -122,12 +122,19 @@ function magyaritEchoThread() {
     // ── Placeholder attribútumok ──
     var placeholders = {
         'Write a comment…': 'Írj egy hozzászólást…',
+        'Write a reply…': 'Írj egy választ…',
         'Your name': 'Neved',
         'Email (optional, never shown)': 'Email (nem kötelező, nem látható)',
     };
     container.querySelectorAll('[placeholder]').forEach(function(el) {
         var p = el.getAttribute('placeholder');
         if (placeholders[p]) el.setAttribute('placeholder', placeholders[p]);
+    });
+
+    // ── data-placeholder (contenteditable szerkesztő) ──
+    container.querySelectorAll('[data-placeholder]').forEach(function(el) {
+        var p = el.getAttribute('data-placeholder');
+        if (placeholders[p]) el.setAttribute('data-placeholder', placeholders[p]);
     });
 
     // ── Aria-label attribútumok ──
@@ -266,7 +273,8 @@ function magyaritEchoThread() {
             if (node.nodeType === 3 && node.textContent.trim() === 'Owner') {
                 var span = document.createElement('span');
                 span.textContent = ' 🦶🏻';
-                span.style.fontSize = '1.2em';
+                span.style.fontSize = '1.3em';
+                span.style.textShadow = '0 1px 3px rgba(0,0,0,0.35)';
                 node.parentNode.replaceChild(span, node);
             }
         });
