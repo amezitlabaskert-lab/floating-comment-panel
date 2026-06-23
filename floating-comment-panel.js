@@ -173,6 +173,10 @@
 #floating-comment-body #echothread {
     margin-top: 0 !important;
 }
+#floating-comment-body .et-avatar,
+#floating-comment-body .et-avatar img {
+    box-shadow: 0 1px 4px var(--text-primary) !important;
+}
 
 /* ── FOOTER ── */
 #floating-comment-footer {
@@ -323,7 +327,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.9';
+    var FCP_VERSION = '6.9.5';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
@@ -582,6 +586,7 @@ function magyaritEchoThread() {
         img.style.cssText = el.style.cssText;
         img.style.borderRadius = '50%';
         img.style.objectFit = 'cover';
+        img.style.boxShadow = '0 1px 4px var(--text-primary)';
         el.parentNode.replaceChild(img, el);
     });
 
