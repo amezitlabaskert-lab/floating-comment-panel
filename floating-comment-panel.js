@@ -383,7 +383,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '7.6;
+    var FCP_VERSION = '7.6';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
