@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '5.9.5';
+    var FCP_VERSION = '5.9.7';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -243,6 +243,7 @@ function magyaritEchoThread() {
         'Report': 'Jelentés',
         'Load more': 'Több mutatása',
         'Show replies': 'Válaszok mutatása',
+        'View replies': 'Válaszok mutatása',
         'Hide replies': 'Válaszok elrejtése',
         'Cancel': 'Mégse',
         'Save': 'Mentés',
@@ -308,6 +309,7 @@ function magyaritEchoThread() {
         }
     }
     toUpdate.forEach(function(node) {
+        node.textContent = node.textContent.replace(/just now/gi, 'Az imént');
         node.textContent = node.textContent.replace(/(\d+)([mhdwy]) ago/g, function(match, count, unit) {
             return count + ' ' + (idoMap[unit] || match);
         });
@@ -319,7 +321,7 @@ function magyaritEchoThread() {
         if (el.dataset.fcpGuestDone) return;
         el.dataset.fcpGuestDone = '1';
         var img = document.createElement('img');
-        img.src = 'https://i.imgur.com/8DJZiU3.png';
+        img.src = 'https://i.imgur.com/GUBj1O3.png';
         img.alt = '';
         img.setAttribute('aria-hidden', 'true');
         img.style.cssText = el.style.cssText;
@@ -342,6 +344,23 @@ function magyaritEchoThread() {
         img.style.display = 'inline-block';
         img.style.flexShrink = '0';
         el.parentNode.replaceChild(img, el);
+    });
+
+    // ── "Replying to" és kommentszám fejléc fordítása ──
+    var walker2 = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+    var node2;
+    var toUpdate2 = [];
+    while (node2 = walker2.nextNode()) {
+        var t2 = node2.textContent;
+        if (/Replying to/i.test(t2) || /\d+ Comments?/i.test(t2)) {
+            toUpdate2.push(node2);
+        }
+    }
+    toUpdate2.forEach(function(node2) {
+        node2.textContent = node2.textContent
+            .replace(/Replying to/gi, 'Válasz erre:')
+            .replace(/(\d+) Comments/gi, '$1 hozzászólás')
+            .replace(/(\d+) Comment/gi, '$1 hozzászólás');
     });
 
     // ── Signin band középre igazítása ──
