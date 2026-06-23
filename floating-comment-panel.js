@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '5.9.7';
+    var FCP_VERSION = '5.9.8';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -315,6 +315,33 @@ function magyaritEchoThread() {
         });
     });
 
+    // ── Statikus EchoThread overrides (CSS-ből áthozva) ──
+    function etOverride() {
+        var et = document.getElementById('floating-comment-body');
+        if (!et) return;
+
+        // .et-format-hint elrejtése
+        et.querySelectorAll('.et-format-hint').forEach(function(el) {
+            el.style.display = 'none';
+        });
+
+        // .et-header h2 elrejtése
+        et.querySelectorAll('.et-header h2').forEach(function(el) {
+            el.style.display = 'none';
+        });
+
+        // .et-bell-dropdown eltolása
+        et.querySelectorAll('.et-bell-dropdown').forEach(function(el) {
+            el.style.transform = 'translateX(100px)';
+        });
+
+        // .et-footer elrejtése
+        et.querySelectorAll('.et-footer').forEach(function(el) {
+            el.style.display = 'none';
+        });
+    }
+    etOverride();
+
     // ── Guest avatar csere ──
     // 1) et-avatar-guest (compose mező avatarja, @ jellel)
     container.querySelectorAll('.et-avatar-guest').forEach(function(el) {
@@ -344,6 +371,13 @@ function magyaritEchoThread() {
         img.style.display = 'inline-block';
         img.style.flexShrink = '0';
         el.parentNode.replaceChild(img, el);
+    });
+
+    // ── "View X reply/replies" gombok fordítása ──
+    container.querySelectorAll('.et-view-replies-btn').forEach(function(btn) {
+        btn.textContent = btn.textContent
+            .replace(/View (\d+) replies/i, '$1 válasz mutatása')
+            .replace(/View (\d+) reply/i, '$1 válasz mutatása');
     });
 
     // ── "Replying to" és kommentszám fejléc fordítása ──
