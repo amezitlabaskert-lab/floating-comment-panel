@@ -65,7 +65,10 @@ function createFloatingCommentPanel() {
         var updateTimer;
         new MutationObserver(function() {
             clearTimeout(updateTimer);
-            updateTimer = setTimeout(updateCommentCount, 100);
+            updateTimer = setTimeout(function() {
+                updateCommentCount();
+                magyaritEchoThread();
+            }, 150);
         }).observe(targetNode, { childList: true, subtree: true });
     }
 }
@@ -111,6 +114,87 @@ function updateCommentCounterUI(total) {
     }
 }
 
+// ── Magyar fordítás (EchoThread) ──
+function magyaritEchoThread() {
+    var container = document.getElementById('floating-comment-body');
+    if (!container) return;
+
+    // Placeholder attribútumok
+    var placeholders = {
+        'Write a comment…': 'Írj egy hozzászólást…',
+        'Your name': 'Neved',
+        'Email (optional, never shown)': 'Email (nem kötelező, nem látható)',
+    };
+    container.querySelectorAll('[placeholder]').forEach(function(el) {
+        var p = el.getAttribute('placeholder');
+        if (placeholders[p]) el.setAttribute('placeholder', placeholders[p]);
+    });
+
+    // Aria-label attribútumok
+    var ariaLabels = {
+        'Write a comment': 'Írj egy hozzászólást',
+        'Your name': 'Neved',
+        'Email (optional, never shown publicly)': 'Email (nem kötelező, nem látható)',
+        'Post comment': 'Küldés',
+        'Attach an image': 'Kép csatolása',
+        'Insert emoji': 'Emoji',
+        'Sign in with Google': 'Belépés Google-lel',
+        'Sign in with X': 'Belépés X-szel',
+        'Sign in with Facebook': 'Belépés Facebookkal',
+        'Remove attached image': 'Kép eltávolítása',
+        'Sign in (optional)': 'Bejelentkezés (nem kötelező)',
+        'Emoji picker': 'Emoji választó',
+    };
+    container.querySelectorAll('[aria-label]').forEach(function(el) {
+        var lbl = el.getAttribute('aria-label');
+        if (ariaLabels[lbl]) el.setAttribute('aria-label', ariaLabels[lbl]);
+    });
+
+    // Szöveges tartalom
+    var szovegek = {
+        'Best': 'Legjobb',
+        'Newest': 'Legújabb',
+        'Oldest': 'Legrégebbi',
+        'Most liked': 'Legtöbb like',
+        'Most replied': 'Legtöbb válasz',
+        'Show the highest-rated recent comments first.': 'A legjobban értékelt kommentek elöl.',
+        'Show the newest comments first.': 'A legújabb kommentek elöl.',
+        'Show the oldest comments first.': 'A legrégebbi kommentek elöl.',
+        'Show the most liked comments first (lifetime).': 'A legtöbb like-ot kapott kommentek elöl.',
+        'Show the most discussed comments first.': 'A legtöbbet válaszolt kommentek elöl.',
+        'Post': 'Küldés',
+        'or sign in': 'vagy jelentkezz be',
+        'Optional. Sign in to react to comments, get notified of replies, and post under a name that\'s yours.': 'Nem kötelező. Belépve reagálhatsz, értesítést kapsz a válaszokról.',
+        'Be the first to comment': 'Legyél az első hozzászóló',
+        'Start the conversation — your thoughts will appear here.': 'Kezdd el a beszélgetést — a hozzászólásaid itt jelennek meg.',
+        'Reply': 'Válasz',
+        'Replies': 'Válaszok',
+        'Like': 'Tetszik',
+        'Edit': 'Szerkesztés',
+        'Delete': 'Törlés',
+        'Report': 'Jelölés',
+        'Load more': 'Több komment',
+        'Show replies': 'Válaszok mutatása',
+        'Hide replies': 'Válaszok elrejtése',
+        'Cancel': 'Mégse',
+        'Save': 'Mentés',
+        'Powered by': 'Működteti:',
+    };
+
+    function forditSzoveg(node) {
+        if (node.nodeType === 3) {
+            var trimmed = node.textContent.trim();
+            if (szovegek[trimmed]) {
+                node.textContent = node.textContent.replace(trimmed, szovegek[trimmed]);
+            }
+        } else if (node.nodeType === 1 && node.tagName !== 'SCRIPT' && node.tagName !== 'STYLE' && node.tagName !== 'SVG') {
+            node.childNodes.forEach(forditSzoveg);
+        }
+    }
+
+    forditSzoveg(container);
+}
+
 // ── Belső: nyit/csuk toggle ──
 function _toggleFloatingPanel() {
     var drawer = document.getElementById('floating-comment-drawer');
@@ -152,7 +236,11 @@ function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url)
         document.body.appendChild(s);
     }
 
-    setTimeout(updateCommentCount, 250);
+    setTimeout(function() {
+        updateCommentCount();
+        magyaritEchoThread();
+    }, 300);
+
     var drawer = document.getElementById('floating-comment-drawer');
     if (drawer) drawer.classList.add('is-visible');
 }
