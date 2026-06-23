@@ -137,7 +137,7 @@
     padding: 15px 18px;
     color: #fff;
     font-family: 'Dancing Script', cursive !important;
-    font-size: 1.4em !important;
+    font-size: 1.8em !important;
     font-weight: 600;
     flex-shrink: 0;
 }
@@ -274,7 +274,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.3';
+    var FCP_VERSION = '6.3.5';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
