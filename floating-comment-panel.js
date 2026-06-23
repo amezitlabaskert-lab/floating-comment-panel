@@ -200,7 +200,6 @@
     border-radius: 50% !important;
     border: 1px solid rgba(0,0,0,0.1) !important;
     cursor: pointer !important;
-    /* Szezon-specifikus primary árnyék */
     box-shadow: 0 2px 4px var(--text-primary) !important;
     transition: transform 0.1s ease, box-shadow 0.2s ease !important;
 }
@@ -208,6 +207,14 @@
 #floating-comment-body .et-signin-band-row > button:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 4px 8px var(--text-primary) !important;
+}
+
+#floating-comment-body .et-message {
+    background-color: var(--szezon-hover) !important;
+    border: 1px solid var(--szezon-szin) !important;
+    color: var(--text-primary) !important;
+    padding: 10px !important;
+    border-radius: 8px !important;
 }
 
 /* ── FOOTER ── */
@@ -359,7 +366,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '7.2';
+    var FCP_VERSION = '7.2.5';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
@@ -535,6 +542,7 @@ function magyaritEchoThread() {
         'Optional. Sign in to react to comments, get notified of replies, and post under a name that\'s yours.': 'Nem kötelező. Belépve reagálhatsz, értesítést kapsz a válaszokról.',
         'Be the first to comment': 'Legyél az első hozzászóló',
         'Start the conversation — your thoughts will appear here.': 'Kezdd el a beszélgetést — a hozzászólásaid itt jelennek meg.',
+        'Thanks! Your comment is in the queue — our spam filter and a moderator review guest comments before they appear.': 'Köszönjük! A hozzászólásod a moderációs sorban várakozik — a spam-szűrőnk és a moderátorok ellenőrzik a vendég hozzászólásokat, mielőtt megjelenítenék őket.',
         'Reply': 'Válasz',
         'Replies': 'Válaszok',
         'Like': 'Tetszik',
