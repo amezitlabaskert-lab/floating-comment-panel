@@ -217,6 +217,23 @@
     border-radius: 8px !important;
 }
 
+#floating-comment-body .et-spoiler {
+    display: inline-block !important;
+    background-color: var(--text-primary) !important;
+    background-image: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0, rgba(255, 255, 255, 0.15) 6px, transparent 6px, transparent 12px) !important;
+    color: transparent !important;
+    cursor: pointer !important;
+    padding: 0 4px !important;
+    border-radius: 3px !important;
+}
+
+#floating-comment-body .et-spoiler.et-spoiler-revealed {
+    background: none !important;
+    color: var(--text-primary) !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
 /* ── FOOTER ── */
 #floating-comment-footer {
     color: rgba(255, 255, 255, 0.6);
@@ -366,7 +383,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '7.5.5';
+    var FCP_VERSION = '7.6;
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
