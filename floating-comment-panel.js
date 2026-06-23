@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '4.4';
+    var FCP_VERSION = '4.5';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -121,8 +121,8 @@ function magyaritEchoThread() {
 
     // ── Placeholder attribútumok ──
     var placeholders = {
-        'Write a comment…': 'Írj egy hozzászólást…',
-        'Write a reply…': 'Írj egy választ…',
+        'Write a comment…': 'Szólj hozzá…',
+        'Write a reply…': 'Válaszolj…',
         'Your name': 'Neved',
         'Email (optional, never shown)': 'Email (nem kötelező, nem látható)',
     };
@@ -240,8 +240,8 @@ function magyaritEchoThread() {
         'Like': 'Tetszik',
         'Edit': 'Szerkesztés',
         'Delete': 'Törlés',
-        'Report': 'Jelölés',
-        'Load more': 'Több komment',
+        'Report': 'Jelentés',
+        'Load more': 'Több mutatása',
         'Show replies': 'Válaszok mutatása',
         'Hide replies': 'Válaszok elrejtése',
         'Cancel': 'Mégse',
@@ -269,15 +269,25 @@ function magyaritEchoThread() {
     container.querySelectorAll('.et-owner-badge').forEach(function(badge) {
         badge.setAttribute('aria-label', 'A Mezítlábas Kert tulajdonosa');
         badge.setAttribute('title', 'A Mezítlábas Kert tulajdonosa');
+
+        // Szövegcsomópont (Owner) → láb span
         badge.childNodes.forEach(function(node) {
             if (node.nodeType === 3 && node.textContent.trim() === 'Owner') {
                 var span = document.createElement('span');
-                span.textContent = ' 🦶🏻';
+                span.className = 'fcp-foot-badge';
+                span.textContent = '🦶🏻';
                 span.style.fontSize = '1.3em';
                 span.style.textShadow = '0 1px 3px rgba(0,0,0,0.35)';
                 node.parentNode.replaceChild(span, node);
             }
         });
+
+        // Sorrend: láb előre, SVG pajzs mögé
+        var foot = badge.querySelector('.fcp-foot-badge');
+        var svg  = badge.querySelector('svg');
+        if (foot && svg && badge.firstChild !== foot) {
+            badge.insertBefore(foot, badge.firstChild);
+        }
     });
 
     // ── Időbélyegzők magyarítása ──
