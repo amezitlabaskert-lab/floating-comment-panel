@@ -359,7 +359,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '7.1.5';
+    var FCP_VERSION = '7.2';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
@@ -612,7 +612,7 @@ function magyaritEchoThread() {
         if (el.dataset.fcpGuestDone) return;
         el.dataset.fcpGuestDone = '1';
         var img = document.createElement('img');
-        img.src = 'https://i.imgur.com/8DJZiU3.png';
+        img.src = 'https://i.imgur.com/wbOal7k.png';
         img.alt = '';
         img.setAttribute('aria-hidden', 'true');
         img.style.cssText = el.style.cssText;
@@ -626,7 +626,7 @@ function magyaritEchoThread() {
         el.dataset.fcpGuestDone = '1';
         var size = el.style.width || '36px';
         var img = document.createElement('img');
-        img.src = 'https://i.imgur.com/8DJZiU3.png';
+        img.src = 'https://i.imgur.com/wbOal7k.png';
         img.alt = '';
         img.style.width = size;
         img.style.height = size;
