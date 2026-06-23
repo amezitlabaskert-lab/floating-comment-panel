@@ -224,6 +224,19 @@
     transition-delay: 200ms;
 }
 
+/* ── Reaction picker háttér + ikonméret ── */
+.et-reaction-picker {
+    background: #ffffff !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+.et-reaction-option {
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    font-size: 22px !important;
+}
+
 /* ── MOBIL ── */
 @media (max-width: 768px) {
     #floating-comment-drawer {
@@ -261,7 +274,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.2.3';
+    var FCP_VERSION = '6.3';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
