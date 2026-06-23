@@ -217,15 +217,6 @@
     border-radius: 8px !important;
 }
 
-#floating-comment-body .et-spoiler:not(.et-spoiler-revealed) {
-    background-color: var(--text-primary) !important;
-    background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 6px, transparent 6px, transparent 12px) !important;
-    color: transparent !important;
-    cursor: pointer !important;
-    padding: 0 4px !important;
-    border-radius: 3px !important;
-}
-
 /* ── FOOTER ── */
 #floating-comment-footer {
     color: rgba(255, 255, 255, 0.6);
