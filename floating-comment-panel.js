@@ -211,6 +211,19 @@
     display: none !important;
 }
 
+/* ── Like picker hover delay ── */
+.et-reaction-wrap .et-reaction-picker {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.1s, visibility 0.1s;
+    transition-delay: 0s;
+}
+.et-reaction-wrap:hover .et-reaction-picker {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 200ms;
+}
+
 /* ── MOBIL ── */
 @media (max-width: 768px) {
     #floating-comment-drawer {
@@ -248,7 +261,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.1';
+    var FCP_VERSION = '6.2';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
