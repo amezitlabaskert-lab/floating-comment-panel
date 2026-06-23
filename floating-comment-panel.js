@@ -258,6 +258,62 @@
         height: 70vh;
     }
 }
+
+/* ── SKIN TOKENEK ── */
+#floating-comment-body .et-widget {
+    --et-color-accent: var(--szezon-szin);
+    --et-color-accent-hover: var(--szezon-hover);
+}
+#floating-comment-body .et-comment-bubble {
+    background: var(--szezon-hover) !important;
+}
+#floating-comment-body .et-owner-badge {
+    background: var(--szezon-szin) !important;
+    box-shadow: 0 1px 4px var(--text-primary) !important;
+}
+#floating-comment-body .et-header h2,
+#floating-comment-body .et-sort-toggle,
+#floating-comment-body .et-sort-option-label,
+#floating-comment-body .et-sort-option-desc,
+#floating-comment-body .et-comment-author,
+#floating-comment-body .et-comment-text,
+#floating-comment-body .et-comment-time,
+#floating-comment-body .et-like-btn,
+#floating-comment-body .et-reply-btn,
+#floating-comment-body .et-view-replies-btn,
+#floating-comment-body .et-like-count,
+#floating-comment-body .et-signin-band-label,
+#floating-comment-body .et-signin-band-benefit,
+#floating-comment-body .et-guest-name,
+#floating-comment-body .et-guest-email,
+#floating-comment-body .et-compose-editor,
+#floating-comment-body .et-format-btn {
+    color: var(--text-primary) !important;
+}
+#floating-comment-body .et-guest-name::placeholder,
+#floating-comment-body .et-guest-email::placeholder,
+#floating-comment-body .et-compose-editor[data-placeholder]::before {
+    color: var(--text-secondary) !important;
+    opacity: 1;
+}
+#floating-comment-btn {
+    background: var(--szezon-szin) !important;
+}
+#floating-comment-btn:hover {
+    background: var(--szezon-hover) !important;
+}
+#floating-comment-label {
+    color: var(--text-primary);
+}
+#floating-comment-header {
+    background: var(--szezon-szin);
+}
+#floating-comment-footer {
+    background: var(--szezon-szin);
+}
+#floating-comment-body .et-replies-list::before {
+    background: var(--szezon-szin) !important;
+}
     `;
     document.head.appendChild(style);
 })();
@@ -267,7 +323,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.8';
+    var FCP_VERSION = '6.9';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
