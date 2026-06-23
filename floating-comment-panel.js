@@ -180,7 +180,6 @@
     box-sizing: border-box !important;
 }
 
-/* ── Ide illeszd be az új bejelentkezési gomb CSS-t ── */
 #floating-comment-body .et-signin-band-row {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
@@ -193,7 +192,7 @@
     align-items: center !important;
     justify-content: center !important;
     padding: 10px !important;
-    border-radius: 8px !important;
+    border-radius: 9999px !important;
     border: 1px solid rgba(0,0,0,0.1) !important;
     min-height: 48px !important;
     cursor: pointer !important;
@@ -354,7 +353,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.9.9';
+    var FCP_VERSION = '7.0';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
