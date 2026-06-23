@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '5.5.7';
+    var FCP_VERSION = '5.8';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -314,16 +314,31 @@ function magyaritEchoThread() {
     });
 
     // ── Guest avatar csere ──
+    // 1) et-avatar-guest (compose mező avatarja, @ jellel)
     container.querySelectorAll('.et-avatar-guest').forEach(function(el) {
+        if (el.dataset.fcpGuestDone) return;
+        el.dataset.fcpGuestDone = '1';
+        var img = document.createElement('img');
+        img.src = 'https://i.imgur.com/GUBj1O3.png';
+        img.alt = '';
+        img.setAttribute('aria-hidden', 'true');
+        img.style.cssText = el.style.cssText;
+        img.style.borderRadius = '50%';
+        img.style.objectFit = 'contain';
+        img.style.background = '#fff';
+        el.parentNode.replaceChild(img, el);
+    });
+    // 2) Monogram avatar guest kommenteknél (nincs valódi profile-user-id)
+    container.querySelectorAll('.et-avatar-clickable[data-profile-user-id=""]').forEach(function(el) {
         if (el.dataset.fcpGuestDone) return;
         el.dataset.fcpGuestDone = '1';
         var img = document.createElement('img');
         img.src = 'https://i.imgur.com/8DJZiU3.png';
         img.alt = '';
-        img.setAttribute('aria-hidden', 'true');
         img.style.cssText = el.style.cssText;
         img.style.borderRadius = '50%';
         img.style.objectFit = 'cover';
+        img.style.background = 'transparent';
         el.parentNode.replaceChild(img, el);
     });
 
