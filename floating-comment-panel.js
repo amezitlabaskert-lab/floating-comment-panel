@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '5.1';
+    var FCP_VERSION = '5.5';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -311,6 +311,20 @@ function magyaritEchoThread() {
         node.textContent = node.textContent.replace(/(\d+)([mhdwy]) ago/g, function(match, count, unit) {
             return count + ' ' + (idoMap[unit] || match);
         });
+    });
+
+    // ── Guest avatar csere ──
+    container.querySelectorAll('.et-avatar-guest').forEach(function(el) {
+        if (el.dataset.fcpGuestDone) return;
+        el.dataset.fcpGuestDone = '1';
+        var img = document.createElement('img');
+        img.src = 'https://i.imgur.com/GUBj1O3.png';
+        img.alt = '';
+        img.setAttribute('aria-hidden', 'true');
+        img.style.cssText = el.style.cssText;
+        img.style.borderRadius = '50%';
+        img.style.objectFit = 'cover';
+        el.parentNode.replaceChild(img, el);
     });
 
     // ── Signin band középre igazítása ──
