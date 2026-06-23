@@ -218,20 +218,12 @@
 }
 
 #floating-comment-body .et-spoiler:not(.et-spoiler-revealed) {
-    display: inline-block !important;
-    background-color: var(--text-primary) !important; 
+    background-color: var(--text-primary) !important;
     background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 6px, transparent 6px, transparent 12px) !important;
-    border-radius: 4px !important;
-    padding: 0px 6px !important;
+    color: transparent !important;
     cursor: pointer !important;
-    user-select: none !important;
-}
-
-/* 2. Felfedett állapot (et-spoiler-revealed): */
-#floating-comment-body .et-spoiler.et-spoiler-revealed {
-    background: none !important; 
-    padding: 0 !important;
-    border: none !important;
+    padding: 0 4px !important;
+    border-radius: 3px !important;
 }
 
 /* ── FOOTER ── */
@@ -383,7 +375,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '7.5';
+    var FCP_VERSION = '7.5.5';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
