@@ -203,10 +203,6 @@
 .et-bell-dropdown {
     transform: translateX(100px) !important;
 }
-.et-widget,
-.et-widget *:not(.et-header h2) {
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-}
 .et-footer {
     display: none !important;
 }
@@ -274,7 +270,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.4';
+    var FCP_VERSION = '6.5.5';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
@@ -321,7 +317,7 @@ function createFloatingCommentPanel() {
         new MutationObserver(function () {
             clearTimeout(updateTimer);
             updateTimer = setTimeout(function () {
-                updateCommentCount();
+                syncEtCommentCount();
                 magyaritEchoThread();
             }, 150);
         }).observe(targetNode, { childList: true, subtree: true });
@@ -329,45 +325,24 @@ function createFloatingCommentPanel() {
 }
 
 
-/* ── Kommentszám kiszámítása ── */
-function updateCommentCount() {
+/* ── EchoThread kommentszám szinkronizálása a tabra ── */
+function syncEtCommentCount() {
     var container = document.getElementById('floating-comment-body');
-    if (!container) return;
-
-    var visibleComments = container.querySelectorAll('.et-comment').length;
-    var hiddenReplies = 0;
-    var replyButtons = container.querySelectorAll('.et-view-replies-btn');
-
-    replyButtons.forEach(function (btn) {
-        var text = btn.textContent || '';
-        var match = text.match(/\d+/);
-        if (!match) return;
-
-        var replyCount = parseInt(match[0], 10);
-        var toggleId = btn.dataset.toggleReplies;
-        if (!toggleId) return;
-
-        var repliesList = document.getElementById('et-replies-' + toggleId);
-        if (!repliesList || getComputedStyle(repliesList).display === 'none') {
-            hiddenReplies += replyCount;
-        }
-    });
-
-    updateCommentCounterUI(visibleComments + hiddenReplies);
-}
-
-
-/* ── UI frissítése ── */
-function updateCommentCounterUI(total) {
     var countDisplay = document.getElementById('comment-count-display');
     var header = document.getElementById('my-custom-comment-count');
+    if (!container || !countDisplay) return;
 
-    if (countDisplay) {
-        countDisplay.textContent = total > 0 ? '(' + total + ')' : '';
+    // Az EchoThread a teljes kommentszámot (válaszokkal együtt) a
+    // .et-comment-count elemben jeleníti meg – ezt másoljuk a tabra.
+    var etCount = container.querySelector('.et-comment-count');
+    var total = 0;
+    if (etCount) {
+        var parsed = parseInt(etCount.textContent, 10);
+        if (!isNaN(parsed)) total = parsed;
     }
-    if (header) {
-        header.textContent = total > 0 ? ' (' + total + ')' : '';
-    }
+
+    countDisplay.textContent = '(' + total + ')';
+    if (header) header.textContent = total > 0 ? ' (' + total + ')' : '';
 }
 
 
@@ -659,7 +634,7 @@ function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url)
     }
 
     setTimeout(function () {
-        updateCommentCount();
+        syncEtCommentCount();
         magyaritEchoThread();
     }, 300);
 
@@ -672,5 +647,8 @@ function updateFloatingCommentPanel(postPageUrl, postIdentifier, titleText, url)
 function hideFloatingCommentPanel() {
     var drawer = document.getElementById('floating-comment-drawer');
     if (drawer) drawer.classList.remove('is-open', 'is-visible');
-    updateCommentCounterUI(0);
+    var countDisplay = document.getElementById('comment-count-display');
+    if (countDisplay) countDisplay.textContent = '(0)';
+    var header = document.getElementById('my-custom-comment-count');
+    if (header) header.textContent = '';
 }
