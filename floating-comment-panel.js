@@ -176,8 +176,7 @@
 #floating-comment-body .et-avatar,
 #floating-comment-body .et-avatar-guest,
 #floating-comment-body img[src*="i.imgur.com"] {
-    border: 2px solid #ffffff !important;           /* Ez adja a fehér keretet/kijelölést */
-    box-shadow: 0 1px 4px var(--text-primary) !important; /* Ez az árnyék, amit kértél */
+    box-shadow: 0 1px 4px var(--text-primary) !important; /* Csak az árnyék */
     box-sizing: border-box !important;
 }
 
@@ -330,7 +329,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.9.7';
+    var FCP_VERSION = '6.9.8';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
