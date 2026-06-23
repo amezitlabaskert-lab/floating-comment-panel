@@ -274,7 +274,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.3.5';
+    var FCP_VERSION = '6.4';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
@@ -294,8 +294,6 @@ function createFloatingCommentPanel() {
     panel.id = 'floating-comment-panel';
     panel.innerHTML =
         '<div id="floating-comment-header">' +
-            '<span style="display:inline-block; transform:scaleX(-1);">🐦</span>' +
-            '<span>Csicsergő<span id="my-custom-comment-count"></span></span>' +
             '<button id="floating-comment-close" aria-label="Csicsergő bezárása">✕</button>' +
         '</div>' +
         '<div id="floating-comment-body">' +
