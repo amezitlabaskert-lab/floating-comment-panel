@@ -248,7 +248,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.0';
+    var FCP_VERSION = '6.1';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
@@ -527,7 +527,7 @@ function magyaritEchoThread() {
         if (el.dataset.fcpGuestDone) return;
         el.dataset.fcpGuestDone = '1';
         var img = document.createElement('img');
-        img.src = 'https://i.imgur.com/8DJZiU3.png';
+        img.src = 'https://i.imgur.com/GUBj1O3.png';
         img.alt = '';
         img.setAttribute('aria-hidden', 'true');
         img.style.cssText = el.style.cssText;
