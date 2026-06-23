@@ -197,9 +197,6 @@
     padding-bottom: 10px !important;
     border-bottom: 1px solid rgba(0,0,0,0.05) !important;
 }
-.et-header h2 {
-    display: none !important;
-}
 .et-bell-dropdown {
     transform: translateX(100px) !important;
 }
@@ -270,7 +267,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.5.5';
+    var FCP_VERSION = '6.6';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
@@ -516,7 +513,6 @@ function magyaritEchoThread() {
         var et = document.getElementById('floating-comment-body');
         if (!et) return;
         et.querySelectorAll('.et-format-hint').forEach(function (el) { el.style.display = 'none'; });
-        et.querySelectorAll('.et-header h2').forEach(function (el) { el.style.display = 'none'; });
         et.querySelectorAll('.et-bell-dropdown').forEach(function (el) { el.style.transform = 'translateX(100px)'; });
         et.querySelectorAll('.et-footer').forEach(function (el) { el.style.display = 'none'; });
     }
