@@ -219,11 +219,9 @@
 
 #floating-comment-body .et-spoiler:not(.et-spoiler-revealed) {
     display: inline-block !important;
-    background-color: #1a2231 !important; /*  */
-    background-image: repeating-linear-gradient(135deg, #ffffff24 0, #ffffff24 6px, #fff0 6px, #fff0 12px) !important; /*  */
-    color: transparent !important; /* Szöveg elrejtése */
+    background-color: var(--text-primary) !important;
     border-radius: 4px !important;
-    padding: 0px 8px !important;
+    padding: 0px 6px !important;
     cursor: pointer !important;
     user-select: none !important;
 }
@@ -377,7 +375,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '7.3.5';
+    var FCP_VERSION = '7.4';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
