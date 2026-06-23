@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '5.0';
+    var FCP_VERSION = '5.1';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -321,13 +321,21 @@ function magyaritEchoThread() {
     var signinRow = container.querySelector('.et-signin-band-row');
     if (signinRow) {
         signinRow.style.justifyContent = 'center';
-        // Sorrend: Google, Facebook, X
-        var google   = signinRow.querySelector('[data-et-provider="google"]');
-        var facebook = signinRow.querySelector('[data-et-provider="facebook"]');
-        var x        = signinRow.querySelector('[data-et-provider="twitter"]');
-        [google, facebook, x].forEach(function(btn) {
-            if (btn) signinRow.appendChild(btn);
-        });
+        // Sorrend: Google, Facebook, X — csak egyszer (flag védi a MutationObserver loop ellen)
+        if (!signinRow.dataset.fcpReordered) {
+            signinRow.dataset.fcpReordered = '1';
+            var google   = signinRow.querySelector('[data-et-provider="google"]');
+            var facebook = signinRow.querySelector('[data-et-provider="facebook"]');
+            var x        = signinRow.querySelector('[data-et-provider="twitter"]');
+
+            // Csak az ikon marad, felirat elrejtve
+            [google, facebook, x].forEach(function(btn) {
+                if (!btn) return;
+                var textSpan = btn.querySelector('.et-signin-band-text');
+                if (textSpan) textSpan.style.display = 'none';
+                signinRow.appendChild(btn);
+            });
+        }
     }
 }
 
