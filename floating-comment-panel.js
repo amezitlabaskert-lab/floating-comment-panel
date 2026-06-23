@@ -174,8 +174,11 @@
     margin-top: 0 !important;
 }
 #floating-comment-body .et-avatar,
-#floating-comment-body .et-avatar img {
-    box-shadow: 0 1px 4px var(--text-primary) !important;
+#floating-comment-body .et-avatar-guest,
+#floating-comment-body img[src*="i.imgur.com"] {
+    border: 2px solid #ffffff !important;           /* Ez adja a fehér keretet/kijelölést */
+    box-shadow: 0 1px 4px var(--text-primary) !important; /* Ez az árnyék, amit kértél */
+    box-sizing: border-box !important;
 }
 
 /* ── FOOTER ── */
@@ -327,7 +330,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '6.9.5';
+    var FCP_VERSION = '6.9.7';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
@@ -586,7 +589,6 @@ function magyaritEchoThread() {
         img.style.cssText = el.style.cssText;
         img.style.borderRadius = '50%';
         img.style.objectFit = 'cover';
-        img.style.boxShadow = '0 1px 4px var(--text-primary)';
         el.parentNode.replaceChild(img, el);
     });
 
