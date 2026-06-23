@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '4.6';
+    var FCP_VERSION = '4.7';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -165,7 +165,7 @@ function magyaritEchoThread() {
             el.setAttribute('aria-label', 'Profil megtekintése');
         }
         if (lbl && lbl.startsWith('Verified site owner')) {
-            el.setAttribute('aria-label', 'A Mezítlábas Kert tulajdonosa');
+            el.setAttribute('aria-label', 'Főkertész');
         }
     });
 
@@ -214,7 +214,7 @@ function magyaritEchoThread() {
         }
 
         if (t.startsWith('Verified owner')) {
-            el.setAttribute('title', 'A Mezítlábas Kert tulajdonosa');
+            el.setAttribute('title', 'Főkertész');
         }
     });
 
@@ -267,8 +267,8 @@ function magyaritEchoThread() {
 
     // ── Owner badge magyarítás ──
     container.querySelectorAll('.et-owner-badge').forEach(function(badge) {
-        badge.setAttribute('aria-label', 'A Mezítlábas Kert tulajdonosa');
-        badge.setAttribute('title', 'A Mezítlábas Kert tulajdonosa');
+        badge.setAttribute('aria-label', 'Főkertész');
+        badge.setAttribute('title', 'Főkertész');
 
         // Szövegcsomópont (Owner) → láb span
         badge.childNodes.forEach(function(node) {
