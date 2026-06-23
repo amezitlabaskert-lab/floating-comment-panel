@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '4.9';
+    var FCP_VERSION = '5.0';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -321,6 +321,13 @@ function magyaritEchoThread() {
     var signinRow = container.querySelector('.et-signin-band-row');
     if (signinRow) {
         signinRow.style.justifyContent = 'center';
+        // Sorrend: Google, Facebook, X
+        var google   = signinRow.querySelector('[data-et-provider="google"]');
+        var facebook = signinRow.querySelector('[data-et-provider="facebook"]');
+        var x        = signinRow.querySelector('[data-et-provider="twitter"]');
+        [google, facebook, x].forEach(function(btn) {
+            if (btn) signinRow.appendChild(btn);
+        });
     }
 }
 
