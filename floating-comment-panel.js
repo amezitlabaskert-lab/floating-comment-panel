@@ -366,7 +366,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '7.7';
+    var FCP_VERSION = '7.8';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
@@ -390,8 +390,8 @@ function createFloatingCommentPanel() {
         '</div>' +
         '<div id="floating-comment-body">' +
             '<div id="echothread" ' +
-                 'data-shortname="mezitlabaskert" ' +
-                 'data-api-key="-_Bx_aoOvDh-6sANgDStoZC-f9I6GCwlTFiSVuIJuZQ">' +
+                 'data-shortname="amezitlabaskert" ' +
+                 'data-api-key="c35BB_2pnztmu_tuwfG8Ud3qDQJlHMAAd31ZkLxrg-I">' +
             '</div>' +
         '</div>' +
         '<div id="floating-comment-footer">v' + FCP_VERSION + '</div>';
