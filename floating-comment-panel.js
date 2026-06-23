@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '4.1';
+    var FCP_VERSION = '4.3';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -121,7 +121,7 @@ function magyaritEchoThread() {
 
     // ── Placeholder attribútumok ──
     var placeholders = {
-        'Write a comment…': 'Szólj hozzá...',
+        'Write a comment…': 'Írj egy hozzászólást…',
         'Your name': 'Neved',
         'Email (optional, never shown)': 'Email (nem kötelező, nem látható)',
     };
@@ -132,10 +132,10 @@ function magyaritEchoThread() {
 
     // ── Aria-label attribútumok ──
     var ariaLabels = {
-        'Write a comment': 'Szólj hozzá',
+        'Write a comment': 'Írj egy hozzászólást',
         'Your name': 'Neved',
         'Email (optional, never shown publicly)': 'Email (nem kötelező, nem látható)',
-        'Post comment': 'Küld',
+        'Post comment': 'Küldés',
         'Attach an image': 'Kép csatolása',
         'Insert emoji': 'Emoji',
         'Sign in with Google': 'Belépés Google-lel',
@@ -146,21 +146,25 @@ function magyaritEchoThread() {
         'Emoji picker': 'Emoji választó',
         'Notifications': 'Értesítések',
         'Copy link to this comment': 'Hivatkozás másolása',
+        'Bold': 'Félkövér',
+        'Italic': 'Dőlt',
+        'Strikethrough': 'Áthúzott',
+        'Spoiler': 'Spoiler',
     };
     container.querySelectorAll('[aria-label]').forEach(function(el) {
         var lbl = el.getAttribute('aria-label');
         if (ariaLabels[lbl]) el.setAttribute('aria-label', ariaLabels[lbl]);
-        // "View X's profile" dinamikus, külön kezeljük
         if (lbl && lbl.startsWith('View ') && lbl.endsWith("'s profile")) {
             el.setAttribute('aria-label', 'Profil megtekintése');
         }
-        // "Verified site owner of X" dinamikus
         if (lbl && lbl.startsWith('Verified site owner')) {
             el.setAttribute('aria-label', 'A Mezítlábas Kert tulajdonosa');
         }
     });
 
     // ── Title attribútumok ──
+    // A toolbar gomboknál a title tartalmaz shortcut infót is, pl.:
+    // "Bold — Ctrl+B  ·  **text**" → csak az eleje egyezik a kulccsal
     var titles = {
         'Remove image': 'Kép eltávolítása',
         'View profile': 'Profil megtekintése',
@@ -182,8 +186,27 @@ function magyaritEchoThread() {
     };
     container.querySelectorAll('[title]').forEach(function(el) {
         var t = el.getAttribute('title');
-        if (titles[t]) el.setAttribute('title', titles[t]);
-        if (t && t.startsWith('Verified owner')) {
+        if (!t) return;
+
+        // Pontos egyezés
+        if (titles[t]) {
+            el.setAttribute('title', titles[t]);
+            return;
+        }
+
+        // Részleges egyezés: "Bold — Ctrl+B  ·  **text**"
+        // A ' —' elválasztó előtti részt fordítjuk, a shortcut szöveg marad
+        var dashIdx = t.indexOf(' —');
+        if (dashIdx !== -1) {
+            var prefix = t.slice(0, dashIdx);
+            var suffix = t.slice(dashIdx);
+            if (titles[prefix]) {
+                el.setAttribute('title', titles[prefix] + suffix);
+                return;
+            }
+        }
+
+        if (t.startsWith('Verified owner')) {
             el.setAttribute('title', 'A Mezítlábas Kert tulajdonosa');
         }
     });
@@ -200,7 +223,7 @@ function magyaritEchoThread() {
         'Show the oldest comments first.': 'A legrégebbi kommentek elöl.',
         'Show the most liked comments first (lifetime).': 'A legtöbb like-ot kapott kommentek elöl.',
         'Show the most discussed comments first.': 'A legtöbbet válaszolt kommentek elöl.',
-        'Post': 'Küld',
+        'Post': 'Küldés',
         'or sign in': 'vagy jelentkezz be',
         'Optional. Sign in to react to comments, get notified of replies, and post under a name that\'s yours.': 'Nem kötelező. Belépve reagálhatsz, értesítést kapsz a válaszokról.',
         'Be the first to comment': 'Legyél az első hozzászóló',
@@ -241,8 +264,34 @@ function magyaritEchoThread() {
         badge.setAttribute('title', 'A Mezítlábas Kert tulajdonosa');
         badge.childNodes.forEach(function(node) {
             if (node.nodeType === 3 && node.textContent.trim() === 'Owner') {
-                node.textContent = ' 🦶🏻';
+                var span = document.createElement('span');
+                span.textContent = ' 🦶🏻';
+                span.style.fontSize = '1.2em';
+                node.parentNode.replaceChild(span, node);
             }
+        });
+    });
+
+    // ── Időbélyegzők magyarítása ──
+    // Formátumok: "5m ago", "2h ago", "3d ago", "1w ago", "2y ago"
+    var idoMap = {
+        'm': 'perce',
+        'h': 'órája',
+        'd': 'napja',
+        'w': 'hete',
+        'y': 'éve'
+    };
+    var walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+    var node;
+    var toUpdate = [];
+    while (node = walker.nextNode()) {
+        if (/\d+[mhdwy] ago/.test(node.textContent)) {
+            toUpdate.push(node);
+        }
+    }
+    toUpdate.forEach(function(node) {
+        node.textContent = node.textContent.replace(/(\d+)([mhdwy]) ago/g, function(match, count, unit) {
+            return count + ' ' + (idoMap[unit] || match);
         });
     });
 }
