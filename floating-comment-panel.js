@@ -185,16 +185,18 @@
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 10px !important;
     margin-top: 15px !important;
+    justify-items: center; 
 }
 
 #floating-comment-body .et-signin-band-row > button {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 10px !important;
-    border-radius: 9999px !important;
+    width: 48px !important; 
+    height: 48px !important;
+    padding: 0 !important; /* A paddinget kivesszük, mert fix a méret */
+    border-radius: 50% !important; /* Ez csinál belőle kör alakú gombot */
     border: 1px solid rgba(0,0,0,0.1) !important;
-    min-height: 48px !important;
     cursor: pointer !important;
     transition: transform 0.1s ease, box-shadow 0.1s ease !important;
 }
@@ -353,7 +355,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '7.0';
+    var FCP_VERSION = '7.1';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
