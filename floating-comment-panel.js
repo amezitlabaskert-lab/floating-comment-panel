@@ -11,7 +11,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '4.5';
+    var FCP_VERSION = '4.6';
 
     // ── Drawer (tab + panel együtt) ──
     var drawer = document.createElement('div');
@@ -312,6 +312,12 @@ function magyaritEchoThread() {
             return count + ' ' + (idoMap[unit] || match);
         });
     });
+
+    // ── Signin band középre igazítása ──
+    var signinRow = container.querySelector('.et-signin-band-row');
+    if (signinRow) {
+        signinRow.style.justifyContent = 'center';
+    }
 }
 
 // ── Belső: nyit/csuk toggle ──
