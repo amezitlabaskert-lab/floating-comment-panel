@@ -217,13 +217,19 @@
     border-radius: 8px !important;
 }
 
+
 #floating-comment-body .et-spoiler:not(.et-spoiler-revealed) {
-    display: inline-block !important;
-    background-color: var(--text-primary) !important;
+    background-color: --text-primary !important;
+    color: transparent !important;
     border-radius: 4px !important;
     padding: 0px 6px !important;
     cursor: pointer !important;
-    user-select: none !important;
+}
+
+#floating-comment-body .et-spoiler.et-spoiler-revealed {
+    background-color: transparent !important; 
+    color: inherit !important;
+    padding: 0 !important;
 }
 
 /* ── FOOTER ── */
@@ -375,7 +381,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '7.4';
+    var FCP_VERSION = '7.4.5';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
