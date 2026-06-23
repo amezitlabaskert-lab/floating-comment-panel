@@ -170,9 +170,11 @@
     padding: 16px;
     -webkit-overflow-scrolling: touch;
 }
+
 #floating-comment-body #echothread {
     margin-top: 0 !important;
 }
+
 #floating-comment-body .et-avatar,
 #floating-comment-body .et-avatar-guest,
 #floating-comment-body img[src*="i.imgur.com"] {
@@ -182,28 +184,30 @@
 
 #floating-comment-body .et-signin-band-row {
     display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 10px !important;
+    grid-template-columns: repeat(3, auto) !important;
+    justify-content: center !important;
+    gap: 8px !important;
     margin-top: 15px !important;
-    justify-items: center; 
 }
 
 #floating-comment-body .et-signin-band-row > button {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 48px !important; 
+    width: 48px !important;
     height: 48px !important;
-    padding: 0 !important; /* A paddinget kivesszük, mert fix a méret */
-    border-radius: 50% !important; /* Ez csinál belőle kör alakú gombot */
+    padding: 0 !important;
+    border-radius: 50% !important;
     border: 1px solid rgba(0,0,0,0.1) !important;
     cursor: pointer !important;
-    transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+    /* Szezon-specifikus primary árnyék */
+    box-shadow: 0 2px 4px var(--text-primary) !important;
+    transition: transform 0.1s ease, box-shadow 0.2s ease !important;
 }
 
 #floating-comment-body .et-signin-band-row > button:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.15) !important;
+    box-shadow: 0 4px 8px var(--text-primary) !important;
 }
 
 /* ── FOOTER ── */
@@ -355,7 +359,7 @@
 function createFloatingCommentPanel() {
     if (document.getElementById('floating-comment-drawer')) return;
 
-    var FCP_VERSION = '7.1';
+    var FCP_VERSION = '7.1.5';
 
     var drawer = document.createElement('div');
     drawer.id = 'floating-comment-drawer';
